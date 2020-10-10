@@ -27,5 +27,38 @@ contract('YSEC', (accounts) =>{
         const totalSupplyAfterBurn = await YSECInstance.totalSupply();
         assert.equal(balanceAfterBurn.valueOf(), 1000000 * Math.pow(10, 18) - 1000, "999000 wasn't in the first account after burn");
         assert.equal(totalSupplyAfterBurn.valueOf(), 1000000 * Math.pow(10, 18) - 1000, "Total supply is not 999000");
-    });  
+    });    
+    it('Failed burn, no governance', async () =>{
+        try{
+            const YSECInstance = await YSEC.deployed();      
+            const balance = await YSECInstance.balanceOf.call(accounts[0]);
+            const totalSupply = await YSECInstance.totalSupply();
+            assert.equal(balance.valueOf(), 1000000 * Math.pow(10, 18), "1000000 wasn't in the first account");
+            assert.equal(totalSupply.valueOf(), 1000000 * Math.pow(10, 18), "Total supply is not 1000000");
+            await YSECInstance.burn(1000, { from: accounts[1] });        
+        }
+        catch(err){
+            assert.include(err.message, "Caller does not have governance", "The error message should contain 'Caller does not have governance'");
+        }        
+    });
+    it('Successfull burn of governance', async () =>{
+        try{
+            const YSECInstance = await YSEC.deployed();      
+            const balance = await YSECInstance.balanceOf.call(accounts[0]);
+            const totalSupply = await YSECInstance.totalSupply();
+            assert.equal(balance.valueOf(), 1000000 * Math.pow(10, 18), "1000000 wasn't in the first account");
+            assert.equal(totalSupply.valueOf(), 1000000 * Math.pow(10, 18), "Total supply is not 1000000");
+            await YSECInstance.burn(1000);
+            const balanceAfterBurn = await YSECInstance.balanceOf.call(accounts[0]);
+            const totalSupplyAfterBurn = await YSECInstance.totalSupply();
+            assert.equal(balanceAfterBurn.valueOf(), 1000000 * Math.pow(10, 18) - 1000, "999000 wasn't in the first account after burn");
+            assert.equal(totalSupplyAfterBurn.valueOf(), 1000000 * Math.pow(10, 18) - 1000, "Total supply is not 999000");     
+            await YSECInstance.burnGovernance();
+            await YSECInstance.burn(1000);
+        }
+        catch(err){
+            assert.include(err.message, "Caller does not have governance", "The error message should contain 'Caller does not have governance'");
+        }        
+    });
+
 });
