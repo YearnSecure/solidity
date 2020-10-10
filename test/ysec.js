@@ -1,6 +1,6 @@
-const YSEC = artifacts.require("YSEC");
+// const YSEC = artifacts.require("YSEC");
 
-contract('YSEC', (accounts) =>{
-    it('should be 0 ', async () =>{        
-    });    
-});
+// contract('YSEC', (accounts) =>{
+//     // it('should be 0 ', async () =>{        
+//     // });    
+// });
