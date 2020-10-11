@@ -9,6 +9,7 @@ __/\\\________/\\\_____/\\\\\\\\\\\____/\\\\\\\\\\\\\\\________/\\\\\\\\\_
        _______\/\\\_______\///\\\\\\\\\\\/___\/\\\\\\\\\\\\\\\____\////\\\\\\\\\_ 
         _______\///__________\///////////_____\///////////////________\/////////__
 
+Let's farm some YSEC!
 Visit and follow!
 
 * Website:  https://www.ysec.finance
@@ -19,28 +20,45 @@ Visit and follow!
 */
 
 // SPDX-License-Identifier: MIT
-import "./ERC20.sol";
-import "./SafeERC20.sol";
+
+import "./TokenFarm.sol";
 
 pragma solidity 0.7.0;
 
-contract YSEC is ERC20{
+contract YSECToYSECFarm is TokenFarm{   
     using SafeMath for uint;
-    using SafeERC20 for IERC20;
+    using SafeERC20 for IERC20;  
 
-    address public Governance;
-
-    constructor () ERC20("YearnSecure", "YSEC", 1000000) {
-        Governance = msg.sender;
+    IERC20 public RewardToken;
+    
+    constructor(address tokenAddress) TokenFarm(tokenAddress){
+        RewardToken = IERC20(tokenAddress);
     }
 
-    function burn(uint256 amount) external {
-        require(msg.sender == Governance, "Caller does not have governance");
-        _burn(msg.sender, amount);
+    function stake(uint256 amount) public override updateRewards(msg.sender){
+        super.stake(amount);
     }
 
-    function burnGovernance() external{
-        require(msg.sender == Governance, "Caller does not have governance");
-        Governance = address(0x0);
+    function unStake(uint256 amount) public override updateRewards(msg.sender){
+        super.unStake(amount);
+    }
+
+    function claimable(address account) public view returns (uint256){
+        //returns current claimable (current rewards of user + extra accumalated)
+    }
+
+    modifier updateRewards(address account){
+        //update rewards of user
+        _;
+    }
+
+    function claim() external updateRewards(msg.sender){
+        uint256 reward = claimable(msg.sender);
+        if(reward > 0)
+        {
+            //update rewards to 0
+            RewardToken.safeTransfer(msg.sender, reward);
+            //logging?
+        }
     }
 }
