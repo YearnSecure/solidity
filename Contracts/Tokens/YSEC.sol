@@ -20,13 +20,11 @@ Visit and follow!
 
 // SPDX-License-Identifier: MIT
 import "./ERC20.sol";
-import "./SafeERC20.sol";
 
 pragma solidity 0.7.0;
 
 contract YSEC is ERC20{
-    using SafeMath for uint;
-    using SafeERC20 for IERC20;
+    using SafeMath for uint;    
 
     address public Governance;
 
