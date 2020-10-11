@@ -15,7 +15,7 @@ Visit and follow!
 * Website:  https://www.ysec.finance
 * Twitter:  https://twitter.com/YearnSecure
 * Telegram: https://t.me/YearnSecure
-* Medium:   https://medium.com/@info_64507
+* Medium:   https://medium.com/@yearnsecure
 
 */
 
